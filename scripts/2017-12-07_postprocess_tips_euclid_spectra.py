@@ -2,13 +2,14 @@ from __future__ import division, print_function
 import numpy as np
 import sys
 import os
+import errno
 import glob
 import re
 from astropy.io import fits
 from astropy.table import Table
 
 
-def main(specfolder, outname):
+def main(specfolder, outpath):
     # Create list of all individual TIPS spectra in folder
     flist = glob.glob(os.path.join(specfolder, "*.fits"))
     flist.sort()
@@ -35,7 +36,13 @@ def main(specfolder, outname):
         
         outspec[spec_id] = tips_spec.field("flux")
 
-    outpath = os.path.join("../data", outname)
+    # Preferentially save it to ../data
+    try:
+        os.makedirs(os.path.dirname(outpath))
+    except OSError as e:
+        if e.errno != errno.EEXIST:
+            raise
+
     outspec.write(outpath, format="csv", overwrite=True)
 
     return None
@@ -44,8 +51,8 @@ def main(specfolder, outname):
 if __name__ == '__main__':
     # Examples from Bruno's laptop. Create an argparser later
     #specfolder = "/Users/brunomor/Desktop/temp_work/2017-12-08_Dedale_temp"
-    #outname = "euclid_tips_spectra_wide.csv"
+    #outpath = "/Users/brunomor/lib/python/dedale_5.1/data/euclid_tips_spectra_wide.csv"
     specfolder = sys.argv[1]
-    outname = sys.argv[2]
+    outpath = sys.argv[2]
 
-    main(specfolder, outname)
+    main(specfolder, outpath)
