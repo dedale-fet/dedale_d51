@@ -12,6 +12,7 @@ from astropy.table import Table
 def main(specfolder, outpath):
     # Create list of all individual TIPS spectra in folder
     flist = glob.glob(os.path.join(specfolder, "*.fits"))
+    assert flist > 0, "No FITS files in this folder. Wrong path?"
     flist.sort()
 
     # Process
