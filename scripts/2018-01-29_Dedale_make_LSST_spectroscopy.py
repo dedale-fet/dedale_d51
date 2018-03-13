@@ -8,8 +8,8 @@ from astropy.io import fits
 
 def main(specname, lsst):
 
-    if not os.path.exists("../data/lsst_cosmossnap_spec/"):
-        os.mkdir("../data/lsst_cosmossnap_spec/")
+    if not os.path.exists("/share/splinter/moraes/REPOSITORIES/dedale_d5.1/data/lsst_cosmossnap_spec/"):
+        os.mkdir("/share/splinter/moraes/REPOSITORIES/dedale_d5.1/data/lsst_cosmossnap_spec/")
 
     # Open LSST table and get SpcExt IDs
     lsst_specIDs = pd.read_csv(lsst, usecols=["Id"]).values.flatten().tolist()
@@ -31,7 +31,7 @@ def main(specname, lsst):
     
     new_hdulist = fits.HDUList(lsst_hdus)
 
-    outname = ('../data/lsst_cosmossnap_spec/lsst_cosmossnap_spectra_%d.fits' % file_digit_id)
+    outname = ('/share/splinter/moraes/REPOSITORIES/dedale_d5.1/data/lsst_cosmossnap_spec/lsst_cosmossnap_spectra_%d.fits' % file_digit_id)
     new_hdulist.writeto(outname, overwrite=True)
 
     return None
@@ -40,6 +40,6 @@ def main(specname, lsst):
 if __name__ == "__main__":
 
     specname = sys.argv[1]
-    lsst_photometry_path = "../data/2017-12-06_LSST_photometry.csv"
+    lsst_photometry_path = "/share/splinter/moraes/REPOSITORIES/dedale_d5.1/data/2017-12-06_LSST_photometry.csv"
 
     main(specname, lsst_photometry_path)
