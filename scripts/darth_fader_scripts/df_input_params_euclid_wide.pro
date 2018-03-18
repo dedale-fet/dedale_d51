@@ -57,16 +57,16 @@
 ;       Written: Adrienne Leonard, Oct 2013
 ;-
 
-function df_input_params_FORTH_tempcomp_run_learned
+function df_input_params_euclid_wide
 
 ;; \\ INPUT FILES AND LOCATIONS //
-INDIR = './FORTH_tempcomp_run/'                     ; Input directory containing the spectra as FITS files
-incat = 'testing_euclid.fits.gz' ; Must specify trainingcat or templatecat, the other may be specified as ''
-trainingcat = 'training_forth_learned_highsnr.fits.gz' ; Set rmscurve = '' for white gaussian nosie
-rmscurve = 'errorcurve_constant.fits.gz'            
+INDIR = '../data/darth_fader/2018-03-13_euclid_wide/'       ; Input directory containing the spectra as FITS files
+incat = '2018-03-13_testing_euclid_wide.fits.gz' ; Must specify trainingcat or templatecat, the other may be specified as ''
+trainingcat = '2018-03-13_training_euclid_wide.fits.gz' ; Set rmscurve = '' for white gaussian nosie
+rmscurve = '2018-03-13_errorcurve_tips_1e18.fits.gz'            
 templatecat = '' ;'templates.fits'
 componentcat = 'components.fits'
-zcat = 'ztrue_saclay.fits.gz'
+zcat = 'ztrue_euclid_wide_deep.fits.gz'
 
 ;; \\ INPUT DATA PARAMETERS //
 
@@ -105,7 +105,7 @@ linefile = 'lines.txt'
 
 ;; \\ OUTPUT SPECIFICATIONS //
 
-OUTDIR = './FORTH_tempcomp_run/'                   ; Directory in which to place the outputs of the Darth Fader Run
+OUTDIR = '../data/darth_fader/2018-03-13_euclid_wide/'                   ; Directory in which to place the outputs of the Darth Fader Run
 OutputComponents = 1            ; Output components of the spectra to a file? 1: Yes, 0: No
 CompFileName = 'components.fits'
 OutputTemplates = 0             ; Output relevant eigentemplates to a file? 1: Yes, 0: No
@@ -113,9 +113,9 @@ TempFileName = 'templates.fits'
 OutputAllEigen = 0              ; Output all eigentemplates to a file? 1: Yes, 0: No
 AllEigenName = 'alleigen.fits'
 OutputRedshifts = 1             ; Output galaxy redshifts to a file? 1: Yes, 0: No
-RedshiftFileName = 'redshifts_forth_learned.fits'
+RedshiftFileName = '2018-03-13_euclid_wide_redshifts.fits'
 OutputCleanCatalogue = 1        ;Output clean catalogue to a file? 1: Yes, 0: No
-CleanFileName = 'clean_catalogue.fits'
+CleanFileName = '2018-03-13_euclid_wide_clean_catalogue.fits'
 
 inp={indir:indir, $
      incat:incat, $
