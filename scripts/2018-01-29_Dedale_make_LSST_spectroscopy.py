@@ -38,6 +38,10 @@ def main(specname, lsst):
 
 
 if __name__ == "__main__":
+    """
+    Running example:
+    python 2018-01-29_Dedale_make_LSST_spectroscopy.py /share/splinter/moraes/Dedale_Project/2016-06-13_simulated_catalogs/2016-#+1517262516
+    """
 
     specname = sys.argv[1]
     lsst_photometry_path = "/share/splinter/moraes/REPOSITORIES/dedale_d5.1/data/2017-12-06_LSST_photometry.csv"
