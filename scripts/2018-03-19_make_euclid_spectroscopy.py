@@ -7,9 +7,9 @@ import pandas as pd
 from astropy.io import fits
 
 def main(specname, euclid):
-
-    if not os.path.exists("/share/splinter/moraes/REPOSITORIES/dedale_d51/data/euclid_cosmossnap_spec/"):
-        os.mkdir("/share/splinter/moraes/REPOSITORIES/dedale_d51/data/euclid_cosmossnap_spec/")
+    outfolder = "/share/splinter/moraes/REPOSITORIES/dedale_d51/data/euclid_cosmossnap_spec/"
+    if not os.path.exists(outfolder):
+        os.mkdir(outfolder)
 
     # Open euclid table and get SpcExt IDs
     euclid_specIDs = pd.read_csv(euclid, usecols=["Id"]).values.flatten().tolist()
@@ -31,7 +31,7 @@ def main(specname, euclid):
     
     new_hdulist = fits.HDUList(euclid_hdus)
 
-    outname = ('/share/splinter/moraes/REPOSITORIES/dedale_d5.1/data/euclid_cosmossnap_spec/euclid_cosmossnap_spectra_%d.fits' % file_digit_id)
+    outname = os.path.join(outfolder, ('euclid_cosmossnap_spectra_%d.fits' % file_digit_id))
     new_hdulist.writeto(outname, overwrite=True)
 
     return None
