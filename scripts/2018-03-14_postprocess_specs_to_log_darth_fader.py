@@ -21,7 +21,7 @@ def main(specpath, noisepath, plots=False):
     
     ## XXX - Need to import more data, including clean Euclid spectra for template learning
     specs = pd.read_csv(specpath) # TIPS noisy spectra
-    clean_specs = pd.read_csv(clean_specpath) # Matched clean spectra
+    clean_specs = pd.read_csv(clean_specpath)
     noise = fits.getdata(noisepath) # Flat noise model simulated with TIPS
     
     
