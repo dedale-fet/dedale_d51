@@ -66,7 +66,7 @@ trainingcat = '2018-03-13_training_euclid_wide.fits.gz' ; Set rmscurve = '' for 
 rmscurve = '2018-03-13_errorcurve_tips_1e18.fits.gz'            
 templatecat = '' ;'templates.fits'
 componentcat = 'components.fits'
-zcat = 'ztrue_euclid_wide_deep.fits.gz'
+zcat = '2018-03-13_ztrue_euclid_wide_deep.fits.gz'
 
 ;; \\ INPUT DATA PARAMETERS //
 
