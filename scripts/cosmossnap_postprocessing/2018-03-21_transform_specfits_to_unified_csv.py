@@ -87,6 +87,9 @@ if __name__ == "__main__":
     Lmax_cosmossnap = 40200
     zmax = (Lmax_cosmossnap/Lmax - 1)
 
+    # Output path *specific for Darth Fader templates for Euclid training*
+    outpath = "/Users/brunomor/lib/python/dedale_d51/data/2018-03-25_euclid_tips_df_training_eigentemplates.csv" 
+
     main(photfile, specfolder, Lmin, Lmax, dL, zmax=zmax, resamp_prec=100, restframe=True,
-         subsample_fraction=1.0)
+         subsample_fraction=1.0, outpath=outpath)
 
