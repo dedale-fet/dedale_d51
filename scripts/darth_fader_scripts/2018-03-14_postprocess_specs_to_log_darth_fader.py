@@ -28,9 +28,9 @@ def main(trainpath, specpath, noisepath, photpath, cosmossnap_phot=False, plots=
         - [Optional] Create the df_input.pro file here.
     """
     
-    # 1) Read the necessary data and perform sanity checks
+    # 1) Read the data and perform sanity checks
     specs = pd.read_csv(specpath) # TIPS noisy spectra
-    clean_specs = pd.read_csv(trainpath)
+    train_specs = pd.read_csv(trainpath)
     noise = fits.getdata(noisepath) # Flat noise model simulated with TIPS
     if cosmossnap_phot:
         photometry = read_cosmossnap_photometry_file(photpath)
@@ -41,31 +41,54 @@ def main(trainpath, specpath, noisepath, photpath, cosmossnap_phot=False, plots=
     wavs_lin = specs["lambda"].as_matrix()
     flux = specs.drop(["lambda"], axis=1).as_matrix()
     errorcurve = noise["error"]
+    
+    wavs_lin_train = train_specs["lambda"].as_matrix()
+    flux_train = train_specs.drop(["lambda"], axis=1).as_matrix()
 
     assert np.allclose(noise["wave"], wavs_lin), "Noise and spectra should have the same wavelengths."
     assert len(ztrue) == flux.shape[1], "Redshifts and spectra should have the same length."
 
-    # 2) Resampling operations
-    # Resample clean training spectrum
-    # Resample test spectra and corresponding noise
-    # Empirical correction to noise
-    ###
-    # Preprocess and feed to resampling
+
+    # 2) Resample observed spectra and errorcurves
     lmin = wavs_lin.min()
     lmax = wavs_lin.max()
     nbins = len(wavs_lin)
     dl = (lmax - lmin)/nbins
-    wavs_log = np.logspace(np.log10(lmin + 5*dl), np.log10(lmax - 5*dl), nbins-100)
-    errors = np.tile(errorcurve, (specs.shape[1], 1)).T
-    spec_resampled, noise_resampled = spectres(wavs_lin, flux, wavs_log, spec_errs=errors)
+    wavs_log = np.logspace(np.log10(lmin + 5*dl), np.log10(lmax - 5*dl), nbins-100) # FIXME - Massaging by hand because of the spectres code.
     
+    errors = np.tile(errorcurve, (flux.shape[1], 1)).T
+    spec_resampled, noise_resampled = spectres(wavs_lin, flux, wavs_log, spec_errs=errors)
     empirical_errorcurve = errorcurve - 2.5e-23*wavs_lin - 5e-20 # Empirical correction to fix wiggles
-    # XXX - Process the training spec somewhere before here. Copy-paste from 2016-10-06 notebook.
+    
+    
+    # 3) Resample training spectra
+    lmin_train = wavs_lin_train.min()
+    lmax_train = wavs_lin_train.max()
+    assert lmin_train < wavs_log.min()/(1 + ztrue.max()), "Training min wavelength is too big."
+    assert lmax_train >= wavs_log.max(), "Training max wavelength is too small."
+    
+    logsteps = np.log10(wavs_log[1:]) - np.log10(wavs_log[:-1])
+    try:
+        lstep = float(np.unique(logsteps.round(decimals=10)))
+    except TypeError as e:
+        raise TypeError("Logarithmic binning lstep is not unique", "Error raised: %s" % e.args[0])
+        
+    wavs_log_train = 10**np.arange(np.log10(lmin_train), np.log10(lmax_train), lstep)
+    # Cropping training log to avoid problems with how spectres deals with the binning
+    wavs_log_train = wavs_log_train[3:-1] 
+    assert wavs_log_train.max() >= wavs_log.max(), "Logbinned training max wavelength became too small."
+    
+    spec_train_resampled = spectres(wavs_lin_train, flux_train, wavs_log_train)
+    
+    # -- OK UNTIL HERE --
+    
+    """
     ###
     
     # 3) Create true redshift file that Darth Fader uses
     ###
     ###
+    """
     
     # 4) Transform to Darth Fader format and save
     ###
@@ -79,6 +102,7 @@ def main(trainpath, specpath, noisepath, photpath, cosmossnap_phot=False, plots=
     # 5) Create Darth Fader df_input_param.pro file
     ###
     
+    """
     # 6) Plot some examples if wanted
     ###
     if plots:
@@ -91,6 +115,7 @@ def main(trainpath, specpath, noisepath, photpath, cosmossnap_phot=False, plots=
         plt.plot(wavs_log, spec_resampled[:, 1340], lw=2)
         plt.show()
     ###
+    """
     
     return None
 
