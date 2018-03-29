@@ -56,7 +56,7 @@ def spectres(spec_wavs, spec_fluxes, resampling, spec_errs=None):
 
     if filter_lhs[0] < spec_lhs[0] or filter_lhs[-1] > spec_lhs[-1]:
         print("Spec_lhs, filter_lhs, filter_rhs, spec_rhs ", spec_lhs[0], filter_lhs[0], filter_lhs[-1], spec_lhs[-1])
-        sys.exit("spectres was passed a spectrum which did not cover the full wavelength range of the specified filter curve.")
+        raise TypeError("spectres was passed a spectrum which did not cover the full wavelength range of the specified filter curve.")
     
 
     #Generate output arrays to be populated
@@ -68,7 +68,8 @@ def spectres(spec_wavs, spec_fluxes, resampling, spec_errs=None):
 
     if spec_errs is not None:
         if spec_errs.shape != spec_fluxes.shape:
-            sys.exit("If specified, spec_errs must be the same shape as spec_fluxes.")
+            #sys.exit("If specified, spec_errs must be the same shape as spec_fluxes.")
+            raise TypeError("If specified, spec_errs must be the same shape as spec_fluxes.")
         else:
             resampled_errs = np.copy(resampled)
 
