@@ -163,7 +163,7 @@ def main(trainpath, specpath, noisepath, photpath, cosmossnap_phot=False, plots=
         plt.show()
     ###
     """
-    
+
     return None
 
 if __name__ == "__main__":
