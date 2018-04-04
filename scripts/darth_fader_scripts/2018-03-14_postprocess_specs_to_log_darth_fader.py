@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from astropy.io import fits
 from itertools import takewhile
+import os
 
 
 def read_cosmossnap_photometry_file(filename):
@@ -16,9 +17,55 @@ def read_cosmossnap_photometry_file(filename):
     return photometry
 
 
+def save_spectra_df_format(fluxes, filepath, saveIDs=False, subsample=None):
+    if subsample is not None:
+        if not (isinstance(subsample, (float, int)) and (0 < subsample < 1)):
+            raise TypeError("subsample must be a real number between 0 and 1 [fraction of subsample].")
+        nspecs = fluxes.as_matrix().shape[1]
+        keep = np.random.choice(nspecs, size=int(subsample*nspecs), replace=False)
+        fluxes = fluxes.iloc[:, keep]
+
+    specIDs = fluxes.columns.values.astype("int")
+    if saveIDs:
+        basename_noext = os.path.basename(filepath).split(".")
+        specID_basename = basename_noext[0] + "_specIDs.txt"
+        specID_path = os.path.join(os.path.dirname(filepath), specID_basename)
+        np.savetxt(specID_path, specIDs, fmt='%s')
+
+    fluxdata = fluxes.as_matrix()
+    hdu = fits.PrimaryHDU()
+    hdu.data = fluxdata.T
+    hdu.writeto(filepath, overwrite=True)
+
+    return specIDs
+
+
+def save_errorcurve_df_format(errorcurve, filepath):
+    out_error = fits.HDUList()
+    out_error.append(fits.ImageHDU())
+    out_error[0].data = errorcurve
+    try:
+        out_error.writeto(filepath, overwrite=True)
+    except IOError as e:
+        raise IOError("Could not save file, check path", "Error raised: %s" % e.args[0])
+
+    return None
+
+
+def save_ztrue_df_format(z, filepath):
+    out_ztrue = fits.PrimaryHDU()
+    out_ztrue.data = z
+    try:
+        out_ztrue.writeto(filepath, overwrite=True)
+    except IOError as e:
+        raise IOError("Could not save file, check path", "Error raised: %s" % e.args[0])
+
+    return None
+
+
 def main(trainpath, specpath, noisepath, photpath, cosmossnap_phot=False, plots=False):
     """Process the Euclid data to be run with Darth Fader
-    
+
     List of steps:
         - Create the noisy testing spectra in log binning on which Darth Fader measures redshifts
         - Create clean training spectra in log binning which Darth Fader uses to learn the eigentemplates
@@ -27,7 +74,7 @@ def main(trainpath, specpath, noisepath, photpath, cosmossnap_phot=False, plots=
         - Create true redshift reference file which Darth Fader uses [for what?]
         - [Optional] Create the df_input.pro file here.
     """
-    
+
     # 1) Read the data and perform sanity checks
     specs = pd.read_csv(specpath) # TIPS noisy spectra
     train_specs = pd.read_csv(trainpath)
@@ -36,18 +83,19 @@ def main(trainpath, specpath, noisepath, photpath, cosmossnap_phot=False, plots=
         photometry = read_cosmossnap_photometry_file(photpath)
     else:
         photometry = pd.read_csv(photpath)
-    ztrue = photometry["redshift"].as_matrix()
-    
+    ztrue = photometry["redshift"]
+
     wavs_lin = specs["lambda"].as_matrix()
     flux = specs.drop(["lambda"], axis=1).as_matrix()
+    specIDs = specs.columns.values[1:].tolist()
     errorcurve = noise["error"]
-    
+
     wavs_lin_train = train_specs["lambda"].as_matrix()
     flux_train = train_specs.drop(["lambda"], axis=1).as_matrix()
+    specIDs_train = train_specs.columns.values[1:].tolist()
 
     assert np.allclose(noise["wave"], wavs_lin), "Noise and spectra should have the same wavelengths."
     assert len(ztrue) == flux.shape[1], "Redshifts and spectra should have the same length."
-
 
     # 2) Resample observed spectra and errorcurves
     lmin = wavs_lin.min()
@@ -55,12 +103,13 @@ def main(trainpath, specpath, noisepath, photpath, cosmossnap_phot=False, plots=
     nbins = len(wavs_lin)
     dl = (lmax - lmin)/nbins
     wavs_log = np.logspace(np.log10(lmin + 5*dl), np.log10(lmax - 5*dl), nbins-100) # FIXME - Massaging by hand because of the spectres code.
-    
+
     errors = np.tile(errorcurve, (flux.shape[1], 1)).T
     spec_resampled, noise_resampled = spectres(wavs_lin, flux, wavs_log, spec_errs=errors)
+    spec_resampled = pd.DataFrame(data=spec_resampled, columns=specIDs)
+
     empirical_errorcurve = errorcurve - 2.5e-23*wavs_lin - 5e-20 # Empirical correction to fix wiggles
-    
-    
+
     # 3) Resample training spectra
     lmin_train = wavs_lin_train.min()
     lmax_train = wavs_lin_train.max()
@@ -79,29 +128,27 @@ def main(trainpath, specpath, noisepath, photpath, cosmossnap_phot=False, plots=
     assert wavs_log_train.max() >= wavs_log.max(), "Logbinned training max wavelength became too small."
     
     spec_train_resampled = spectres(wavs_lin_train, flux_train, wavs_log_train)
-    
-    # -- OK UNTIL HERE --
-    
-    """
-    ###
-    
-    # 3) Create true redshift file that Darth Fader uses
-    ###
-    ###
-    """
+    spec_train_resampled = pd.DataFrame(data=spec_train_resampled, columns=specIDs_train)
     
     # 4) Transform to Darth Fader format and save
-    ###
-    ## Create errorcurve and save
-    errorcurve = fits.HDUList()
-    errorcurve.append(fits.ImageHDU())
-    errorcurve[0].data = empirical_errorcurve
-    errorcurve.writeto("../data/darth_fader/2018-03-13_euclid_wide/errorcurve_euclid_wide.fits.gz")
-    ###
-    
+    save_spectra_df_format(spec_train_resampled, "/Users/brunomor/lib/python/dedale_d51/data/darth_fader/2018-03-29_euclid_wide/2018-03-29_training_tips.fits.gz", saveIDs=False, subsample=0.02)
+    specIds_test_out = save_spectra_df_format(spec_resampled, "/Users/brunomor/lib/python/dedale_d51/data/darth_fader/2018-03-29_euclid_wide/2018-03-29_testing_tips.fits.gz", saveIDs=True, subsample=0.01)
+    save_errorcurve_df_format(empirical_errorcurve, "/Users/brunomor/lib/python/dedale_d51/data/darth_fader/2018-03-29_euclid_wide/2018-03-29_errorcurve_tips_1e18.fits.gz")
+
+    ztrue_test_out = ztrue[photometry['Id'].isin(specIds_test_out)]
+    assert len(ztrue_test_out) == len(specIds_test_out), "Bruno, you fucked up with the redshifts!"
+    save_ztrue_df_format(ztrue_test_out, "/Users/brunomor/lib/python/dedale_d51/data/darth_fader/2018-03-29_euclid_wide/2018-03-29_ztrue.fits.gz")
+
+    print("""lstep = %f
+    training_lim = %f
+    training_lmax = %f
+    data_lmin = %f
+    data_lmax = %f""" % (lstep, wavs_log_train.min(), wavs_log_train.max(), wavs_log.min(), wavs_log.max()))
+
+
     # 5) Create Darth Fader df_input_param.pro file
     ###
-    
+
     """
     # 6) Plot some examples if wanted
     ###
