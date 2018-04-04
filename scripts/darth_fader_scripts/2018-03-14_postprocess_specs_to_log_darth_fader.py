@@ -1,3 +1,10 @@
+"""Issues to fix:
+
+- Write an argparser
+- Take details of resampling spectra into a function
+- Discuss with Sam how to redesign this code for the milestone release
+"""
+
 import numpy as np
 from dedale_d51.src.spectres import spectres
 import matplotlib.pyplot as plt
