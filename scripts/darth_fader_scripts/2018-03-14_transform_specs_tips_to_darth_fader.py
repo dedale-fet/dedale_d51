@@ -69,11 +69,7 @@ def main(trainpath, specpath, noisepath, photpath, cosmossnap_phot=False, plots=
     assert lmin_train < wavs_log.min()/(1 + ztrue.max()), "Training min wavelength is too big."
     assert lmax_train >= wavs_log.max(), "Training max wavelength is too small."
     
-    logsteps = np.log10(wavs_log[1:]) - np.log10(wavs_log[:-1])
-    try:
-        lstep = float(np.unique(logsteps.round(decimals=10)))
-    except TypeError as e:
-        raise TypeError("Logarithmic binning lstep is not unique", "Error raised: %s" % e.args[0])
+    lstep = dfu.get_lstep(wavs_log)
         
     wavs_log_train = 10**np.arange(np.log10(lmin_train), np.log10(lmax_train), lstep)
     # Cropping training log to avoid problems with how spectres deals with the binning

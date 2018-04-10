@@ -55,3 +55,13 @@ def save_ztrue_df_format(z, filepath):
         raise IOError("Could not save file, check path", "Error raised: %s" % e.args[0])
 
     return None
+
+
+def get_lstep(wavelengths):
+    logsteps = np.log10(wavelengths[1:]) - np.log10(wavelengths[:-1])
+    try:
+        lstep = float(np.unique(logsteps.round(decimals=10)))
+    except TypeError as e:
+        raise TypeError("Logarithmic binning lstep is not unique", "Error raised: %s" % e.args[0])
+
+    return lstep
