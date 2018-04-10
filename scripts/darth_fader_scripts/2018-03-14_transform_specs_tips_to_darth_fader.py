@@ -2,10 +2,10 @@
 - Write an argparser
 - Take details of resampling spectra into a function
 - Discuss with Sam how to redesign this code for the milestone release
+- Add docstrings to everything
 """
 
 import numpy as np
-import matplotlib.pyplot as plt
 import pandas as pd
 from astropy.io import fits
 from itertools import takewhile
