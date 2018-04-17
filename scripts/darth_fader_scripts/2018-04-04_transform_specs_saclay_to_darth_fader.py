@@ -37,7 +37,7 @@ def main(outfolder):
         specs = np.load(specinfo["specpath"]).T # Transposing to more common ordering
         specs = pd.DataFrame(data=specs)
         filepath = os.path.join(outfolder, specinfo["outpath"])
-        dfu.save_spectra_df_format(specs, filepath, saveIDs=False)
+        dfu.save_spectra_df_format(specs, filepath, saveIDs=False, subsample=0.1)
 
         wavs = np.load(specinfo["wavpath"])
         lstep = dfu.get_lstep(wavs)
@@ -50,7 +50,7 @@ def main(outfolder):
 
 if __name__ == "__main__":
     # Inputs
-    infolder = "/Users/brunomor/lib/python/dedale_d51/data/darth_fader/2018-03-30_Florent_spec_data/download/"
-    outfolder = "/Users/brunomor/lib/python/dedale_d51/data/darth_fader/2018-03-30_Florent_spec_data/df_format/"
+    infolder = "/Users/brunomor/lib/python/dedale_d51/data/darth_fader/2018-04-04_Florent_spec_data/download/"
+    outfolder = "/Users/brunomor/lib/python/dedale_d51/data/darth_fader/2018-04-04_Florent_spec_data/df_format/"
 
     main(outfolder)
