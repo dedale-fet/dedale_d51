@@ -24,7 +24,7 @@
 ;       Written: Adrienne Leonard, Oct 2013
 ;-
 
-pro darth_fader, DecSpectra, template, estred, clean_catalogue, altincat=altincat, verbose=verbose, S_TabPeaks=S_TabPeaks, Data=Data, Training=Training, TnoBaseline=TnoBaseline, iterz=iterz, flag = flag
+pro darth_fader, DecSpectra, template, estred, clean_catalogue, altincat=altincat, verbose=verbose, S_TabPeaks=S_TabPeaks, Data=Data, Training=Training, TnoBaseline=TnoBaseline, iterz=iterz, flag=flag, altzcat=altzcat
 
 ;; Read in the data
 if keyword_set(verbose) then print, 'Reading data...'
@@ -86,7 +86,8 @@ if input.estred eq 0 then estred = readfits(input.indir+input.zcat) else begin
    else Estred = df_get_redshift(DecSpectra.data_clean, Template, lstep = input.lstep, shiftpar = input.shiftpar)
 endelse
 if keyword_set(verbose) then print, 'done!'
-   
+
+if keyword_set(altzcat) then input.RedshiftFilename = altzcat
 if input.OutputRedshifts eq 1 then writefits, input.outdir + input.RedshiftFileName, Estred
 
 ;; Clean catalogue, if required
