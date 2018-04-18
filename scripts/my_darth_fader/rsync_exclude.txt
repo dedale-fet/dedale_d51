@@ -1,0 +1,8 @@
+2018-04-04_Florent_spec_data/
+2018-03-13_Saclay_reference_run_refamiliarising_myself_with_DF/
+2018-03-29_euclid_wide/
+df_data/
+FORTH_tempcomp_run
+Saclay_reference_run/
+TEST/
+2018-04-13_Florent_spec_data/
