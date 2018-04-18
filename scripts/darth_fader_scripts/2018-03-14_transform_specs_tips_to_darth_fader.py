@@ -80,13 +80,13 @@ def main(trainpath, specpath, noisepath, photpath, cosmossnap_phot=False, plots=
     spec_train_resampled = pd.DataFrame(data=spec_train_resampled, columns=specIDs_train)
     
     # 4) Transform to Darth Fader format and save
-    dfu.save_spectra_df_format(spec_train_resampled, "/Users/brunomor/lib/python/dedale_d51/data/darth_fader/2018-03-29_euclid_wide/2018-03-29_training_tips.fits.gz", saveIDs=False, subsample=0.02)
-    specIds_test_out = dfu.save_spectra_df_format(spec_resampled, "/Users/brunomor/lib/python/dedale_d51/data/darth_fader/2018-03-29_euclid_wide/2018-03-29_testing_tips.fits.gz", saveIDs=True, subsample=0.01)
-    dfu.save_errorcurve_df_format(empirical_errorcurve, "/Users/brunomor/lib/python/dedale_d51/data/darth_fader/2018-03-29_euclid_wide/2018-03-29_errorcurve_tips_1e18.fits.gz")
+    dfu.save_spectra_df_format(spec_train_resampled, "/Users/brunomor/lib/python/dedale_d51/data/darth_fader/2018-03-29_euclid_wide/2018-03-29_training_tips.fits", saveIDs=False, subsample=0.1)
+    specIds_test_out = dfu.save_spectra_df_format(spec_resampled, "/Users/brunomor/lib/python/dedale_d51/data/darth_fader/2018-03-29_euclid_wide/2018-03-29_testing_tips.fits", saveIDs=True, subsample=0.1)
+    dfu.save_errorcurve_df_format(empirical_errorcurve, "/Users/brunomor/lib/python/dedale_d51/data/darth_fader/2018-03-29_euclid_wide/2018-03-29_errorcurve_tips_1e18.fits")
 
     ztrue_test_out = ztrue[photometry['Id'].isin(specIds_test_out)]
     assert len(ztrue_test_out) == len(specIds_test_out), "Redshifts and IDs do not have the same length."
-    dfu.save_ztrue_df_format(ztrue_test_out, "/Users/brunomor/lib/python/dedale_d51/data/darth_fader/2018-03-29_euclid_wide/2018-03-29_ztrue.fits.gz")
+    dfu.save_ztrue_df_format(ztrue_test_out, "/Users/brunomor/lib/python/dedale_d51/data/darth_fader/2018-03-29_euclid_wide/2018-03-29_ztrue.fits")
 
     return None
 
