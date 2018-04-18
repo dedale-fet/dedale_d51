@@ -47,7 +47,7 @@ if strmatch(input.rmscurve,'*.fits') or  strmatch(input.rmscurve,'*.fits.gz')  t
    rms = readfits(input.indir + input.rmscurve) else begin
    rms = 0.
    print,'RMS curve not set; assuming white Gaussian noise'
-   rms = 1e-4*get_noise(data)
+   rms = get_noise(data)
    print, rms
 endelse
 if keyword_set(verbose) then print,'done!'
