@@ -24,15 +24,13 @@
 ;       Written: Adrienne Leonard, Oct 2013
 ;-
 
-pro darth_fader, DecSpectra, template, estred, clean_catalogue, verbose=verbose, S_TabPeaks=S_TabPeaks, Data=Data, Training=Training, TnoBaseline=TnoBaseline, iterz=iterz, flag = flag
+pro darth_fader, DecSpectra, template, estred, clean_catalogue, altincat=altincat, verbose=verbose, S_TabPeaks=S_TabPeaks, Data=Data, Training=Training, TnoBaseline=TnoBaseline, iterz=iterz, flag = flag
 
 ;; Read in the data
 if keyword_set(verbose) then print, 'Reading data...'
-;;input = df_input_params_FORTH_tempcomp_run_learned()
-;;input = test1_df_input_params_Saclay_reference_run()
-;;input = df_input_2018_euclid_wide()
-;;input = df_input_2018_Saclay_production_runs()
 input = df_input_params()
+
+if keyword_set(altincat) then input.incat = altincat
 
 if strmatch(input.incat,'*.fits') or strmatch(input.incat,'*.fits.gz') then $
    data = readfits(input.indir + input.incat) else message,'Input catalogue not specified!'
