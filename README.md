@@ -1,45 +1,63 @@
-**Edit a file, create a new file, and clone from Bitbucket in under 2 minutes**
+# MS4 - Application to EUCLID data - Realistic galaxy simulations and redshift measurements [Change title later]
 
-When you're done, you can delete the content in this README and update the file with details for others getting started with your repository.
+This repository contains a suite of tools to link astrophysical simulation codes, which are combined in a pipeline to generate galaxy photometry and spectroscopy representative of the expected quality of the Euclid Mission data. This simulated data set can be used to help develop and benchmark spectroscopic and photometric redshift estimation methods, and to assess whether their redshift accuracy meets the official Mission Requirements for successful cosmological measurements.
 
-*We recommend that you open this README in another tab as you perform the tasks below. You can [watch our video](https://youtu.be/0ocf7u76WSo) for a full demo of all the steps in this tutorial. Open the video in a new tab to avoid leaving Bitbucket.*
+The software available in the repository includes:
+   - List the functionality here
+   - bla 1
+   - bla 2
+
+---
+> Main Authors: **Bruno Moraes (UCL), Filipe Abdalla (UCL), whoelse**  
+> Year: **2016-2018**   
+> Corresponding Author: [b.moraes@ucl.ac.uk](mailto:b.moraes@ucl.ac.uk)
+> Website: [https://github.com/dedale-fet](https://github.com/dedale-fet)
 
 ---
 
-## Edit a file
-
-You’ll start by editing this README file to learn how to edit a file in Bitbucket.
-
-1. Click **Source** on the left side.
-2. Click the README.md link from the list of files.
-3. Click the **Edit** button.
-4. Delete the following text: *Delete this line to make a change to the README from Bitbucket.*
-5. After making your change, click **Commit** and then **Commit** again in the dialog. The commit page will open and you’ll see the change you just made.
-6. Go back to the **Source** page.
-
----
-
-## Create a file
-
-Next, you’ll add a new file to this repository.
-
-1. Click the **New file** button at the top of the **Source** page.
-2. Give the file a filename of **contributors.txt**.
-3. Enter your name in the empty file space.
-4. Click **Commit** and then **Commit** again in the dialog.
-5. Go back to the **Source** page.
-
-Before you move on, go ahead and explore the repository. You've already seen the **Source** page, but check out the **Commits**, **Branches**, and **Settings** pages.
+## Table of Contents
+1. [Introduction](#intro)
+    * [The need for simulations](#need4sims)
+    * [The structure](#struct)
+2. [Requirements](#requirements)
+    * [COSMOSSNAP](#cosmossnap)
+    * [TIPS](#tips)
+    * [A cluster with PBS](#pbscluster)
+3. [Example](#example)
+    * [Generating a COSMOSSNAP data set](#step1)
+    * [Preprocessing to TIPS](#step2)
+    * [Generating spectra with TIPS](#step3)
+    * [Postprocessing and final set generation](#step4)
+    * [Measuring redshifts](#step5)
 
 ---
 
-## Clone a repository
+## <a name="intro"></a> Introduction
 
-Use these steps to clone from SourceTree, our client for using the repository command-line free. Cloning allows you to work on your files locally. If you don't yet have SourceTree, [download and install first](https://www.sourcetreeapp.com/). If you prefer to clone from the command line, see [Clone a repository](https://confluence.atlassian.com/x/4whODQ).
+### <a name="need4sims"></a> The need for simulations
+   - Truth table to test scientific pipeline analysis
+   - We want realistic spectroscopic and photometric properties and types at the object level.
+   - We want realistic population-level spectrophotometric properties.
+   - Photometric properties
+       - Galaxy population from the real-life COSMOS survey.
+       - Forward-simulated fluxes with filters from current and upcoming surveys.
+   - 
 
-1. You’ll see the clone button under the **Source** heading. Click that button.
-2. Now click **Check out in SourceTree**. You may need to create a SourceTree account or log in.
-3. When you see the **Clone New** dialog in SourceTree, update the destination path and name if you’d like to and then click **Clone**.
-4. Open the directory you just created to see your repository’s files.
+### <a name="struct"></a> The structure
+    - COSMOSSNAP for the base spectro-photometric simulation
+    - White gaussian noise 
+    - TIPS for realistic Euclid slitless spectroscopy 
 
-Now that you're more familiar with your Bitbucket repository, go ahead and add a new file locally. You can [push your change back to Bitbucket with SourceTree](https://confluence.atlassian.com/x/iqyBMg), or you can [add, commit,](https://confluence.atlassian.com/x/8QhODQ) and [push from the command line](https://confluence.atlassian.com/x/NQ0zDQ).
+## <a name="requirements"></a> Requirements
+
+### <a name="cosmossnap"></a> COSMOSSNAP
+   - What is COSMOSSNAP.
+   - How to install it.
+
+### <a name="tips"></a> TIPS
+   - What is TIPS.
+   - How to install it.
+
+### <a name="pbscluster"></a> A cluster with PBS nodes
+
+## <a name="example"></a> Example: Euclid-like spectroscopic data
