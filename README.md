@@ -71,8 +71,9 @@ We also require realistic spectral energy distributions (SEDs) and emission-line
 All necessary Python dependencies are included in the Anaconda distribution. The code is compatible with Python 2 and 3.
 
 ### <a name="cosmossnap"></a> COSMOSSNAP
-COSMOSSNAP is a XXX implementation of the spectro-photometric simulations described in [this article](https://arxiv.org/abs/0902.0625). As discussed in the introduction, 
-   - How to install it.
+COSMOSSNAP is a FORTRAN 77 package to generate spectrophotometric simulations based on real data from the Hubble Telescope [COSMOS survey](http://cosmos.astro.caltech.edu/). It uses galaxy properties catalogs from COSMOS observations, combined with many follow-up ground observations, to generate a synthetic catalog reproducing the relevant observational properties, whilst associating a "true" consistent redshift and SED to each galaxy. Details are described in [Jouvel et al. (2009)](https://arxiv.org/abs/0902.0625).
+
+Previous public links to COSMOSSNAP are deprecated. To obtain a copy of the software and installation instructions, please contact the Corresponding Author.
 
 ### <a name="tips"></a> TIPS
 
@@ -81,9 +82,9 @@ TIPS is a software package designed to perform simulations of astronomical slitl
 To install TIPS, clone and follow instructions from https://gitlab.in2p3.fr/in2p3_euclid/tips
 
 ### <a name="isap"></a> ISAP
-ISAP (Interactive Sparse Astronomical Data Analysis Packages) is a collection of packages in IDL and C++ related to sparsity and its application in astronomical data analysis. You will only need it if you intend to use Darth Fader [add details here] to estimate spectroscopic redshifts or denoise galaxy spectra. Instructions for downloading and installing ISAP can be found on its [main webpage](http://www.cosmostat.org/software/isap).
+ISAP (Interactive Sparse Astronomical Data Analysis Packages) is a collection of packages in IDL and C++ related to sparsity and its application in astronomical data analysis. You will only need it if you intend to estimate spectroscopic redshifts or denoise galaxy spectra. Instructions for downloading and installing ISAP can be found on its [main webpage](http://www.cosmostat.org/software/isap).
 
-_You will also need an IDL installation and license for this functionality to work. [IDL](http://www.idl-envi.com) is a numerical analysis software analogous to Matlab and ~~is~~ (was?) very widely used in astrophysics._
+_You will also need an IDL installation and license for this functionality to work. [IDL](http://www.idl-envi.com) is a numerical analysis software analogous to Matlab and is often used in astrophysics, especially in legacy code._
 
 
 ### <a name="pbscluster"></a> A PBS cluster
@@ -92,11 +93,9 @@ You will definitely need a computational cluster if you intend to run COSMOSSNAP
 
 ## <a name="start"></a> Getting Started
 
-To use the functionality developed in this repository, simply clone it into your prefered location and ensure that your system's PYTHONPATH points to it. Setting paths for the [Requirements](#requirements) will be necessary only for the specific functionality you intend to use; for example, ISAP and IDL paths if you wish to run Darth Fader on your data.
+To use the functionality developed in this repository, simply clone it into your preferred location and ensure that your system's PYTHONPATH points to it. Setting paths for the [Requirements](#requirements) will be necessary only for the specific functionality you intend to use.
 
-All calls to data in any of the examples refer to the relative location a 'data' folder. To set this up, create an empty 'data' folder in ./dedale_d51/, download this [tarball](add_link_here) (for example, with wget) and untar it within the data folder. __BEWARE:__ This currently contains XX GB of data. This alternative [tarball](add_link_here) contains only the data needed to run the example below. For alternative ways to distribute the full data set, contact the Corresponding Author.
-
-
+All calls to data in any of the examples refer to the relative location a 'data' folder. To set this up, create an empty 'data' folder in ./dedale_d51/, download this [tarball](add_link_here) (for example, with wget) and untar it within the data folder. __BEWARE: This currently contains several GBs of data.__ This alternative [tarball](add_link_here) contains only the data needed to run the example below. For alternative ways to distribute the full data set, contact the Corresponding Author.
 
 ## <a name="example"></a> Example: Euclid-like spectroscopic data
 
