@@ -25,12 +25,13 @@ The software available in the repository includes:
     * [ISAP](#isap)
     * [A PBS cluster](#pbscluster)
 3. [Getting Started](#start)
-3. [Example](#example)
-    * [Generating a COSMOSSNAP data set](#step1)
-    * [Preprocessing to TIPS](#step2)
-    * [Generating spectra with TIPS](#step3)
-    * [Postprocessing and final set generation](#step4)
-    * [Measuring redshifts](#step5)
+3. [Example: Realistic Euclid spectroscopic data set creation](#example)
+    * [Generating a base galaxy photometry catalog and associated spectra with COSMOSSNAP](#step1)
+    * [Transforming spectra to TIPS input format](#step2)
+    * [Generating realistic Euclid noisy spectra with TIPS](#step3)
+    * [Postprocessing and sample selection for final catalog](#step4)
+    * [Measuring redshifts I: transforming to Darth Fader format](#step5)
+    * [Measuring redshifts II: running Darth Fader](#step6)
 
 ---
 
