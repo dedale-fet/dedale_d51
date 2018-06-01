@@ -23,7 +23,7 @@ The software available in the repository includes:
     * [COSMOSSNAP](#cosmossnap)
     * [TIPS](#tips)
     * [ISAP](#isap)
-    * [A cluster with PBS](#pbscluster)
+    * [A PBS cluster](#pbscluster)
 3. [Getting Started](#start)
 3. [Example](#example)
     * [Generating a COSMOSSNAP data set](#step1)
