@@ -16,8 +16,8 @@ The software available in the repository includes:
 1. [Introduction](#intro)
     * [Dark Energy and the Euclid satellite](#science)
     * [Spectroscopic and photometric redshifts](#specphot)
-    * [The need for simulations](#need4sims)
-    * [The structure](#struct)
+    * [Simulations need](#need4sims)
+    <!--- * [The structure](#struct) --->
 2. [Requirements](#requirements)
     * [Basic Python dependencies](#basic)
     * [COSMOSSNAP](#cosmossnap)
@@ -40,7 +40,7 @@ The software available in the repository includes:
 
 The European Space Agency [Euclid Mission](http://sci.esa.int/euclid) aims to measure the global properties of the Universe to unprecedented accuracy, with particular emphasis on the properties of the mysterious Dark Energy that is driving the acceleration of the expansion of the Universe. These properties can be inferred from the statistical distribution of galaxies in the Universe and from the effects of the matter distribution on their observed shapes through gravitational lensing. However, this requires extreme precision and accuracy on shape and positional measurements of galaxies.
 
-In particular, measuring their radial distances from us is one of the most challenging problems in modern observational cosmology. The way we infer those distances is through the Doppler effect: due to the expansion of the Cosmos, galaxies are receding from us and their light is consequently shifted towards longer wavelengths (the "red" side of the electromagnetic spectrum). These _redshifts_ are directly related to the galaxies’ distances, and by measuring it from the properties of the received light, we can reconstruct their positions.
+In particular, measuring their radial distances from us is one of the most challenging problems in modern observational cosmology. The way we infer those distances is through the Doppler effect: due to the expansion of the Cosmos, galaxies are receding from us and their light is consequently shifted towards longer wavelengths (the "red" side of the electromagnetic spectrum). This _redshift_ is directly related to a galaxy's distance, and by measuring it from the properties of the received light, we can reconstruct its position.
 
 ### <a name="specphot"></a> Spectroscopic and photometric redshifts
 
@@ -51,19 +51,18 @@ _Photometric redshift_ measurements, on the other hand, try to reconstruct the r
 
 ### <a name="need4sims"></a> Simulation needs
 
-__ADD PARAGRAPH HERE AS TO WHY SIMULATIONS ARE IMPORTANT__
+<!---__ADD PARAGRAPH HERE AS TO WHY SIMULATIONS ARE IMPORTANT__--->
 
 When generating a large realistic simulated spectroscopic and photometric data set to be used as a test bed for redshift estimation, we need to ensure that it is representative of the expected quality of Euclid data. Another requirement is to have a realistic distribution of galaxies in several photometric observational parameters. We want our simulated data to follow representative redshift, color, magnitude and spectral type distributions. These quantities depend on each other in intricate ways; correctly capturing the correlations is essential if we want to have a realistic assessment of the accuracy and improvements of our proposed methods.
 
-We also require realistic spectral energy distributions (SEDs) and emission-line strengths. Euclid will observe an estimated 50 million spectra through slitless spectroscopy. The required sensitivity is defined in terms of the significance of the detection of the Hα Balmer transition line. These requirements imply a detection rate that depends on magnitude and redshift. These observational requirements demand that we simulated realistic Hα line width and strength, depending on the properties of the continuum of the spectral distribution. In addition to continuum and line properties, extinction of light by dust within each galaxy needs to be simulated.
+We also require realistic spectral energy distributions (SEDs) and emission-line strengths. Euclid will observe an estimated 50 million spectra through slitless spectroscopy. The required sensitivity is defined in terms of the significance of the detection of the Hα Balmer transition line. These requirements imply a detection rate that depends on magnitude and redshift, therefore demanding that we simulated realistic Hα line width and strength, which depend on the properties of the continuum of the spectral distribution. In addition to continuum and line properties, extinction of light by dust within each galaxy needs to be simulated.
 
-We will describe in the examples below how we deal with several of those aspects. __IMPROVE THIS PHRASE__
-
-
+<!---
 ### <a name="struct"></a> The structure
     - COSMOSSNAP for the base spectro-photometric simulation
     - White gaussian noise 
     - TIPS for realistic Euclid slitless spectroscopy 
+--->
 
 ## <a name="requirements"></a> Requirements
 
