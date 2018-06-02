@@ -25,13 +25,12 @@ The software available in the repository includes:
     * [ISAP](#isap)
     * [A PBS cluster](#pbscluster)
 3. [Getting Started](#start)
-3. [Example: Realistic Euclid spectroscopic data set creation](#example)
-    * [Generating a base galaxy photometry catalog and associated spectra with COSMOSSNAP](#step1)
+4. [Example: Realistic Euclid spectroscopic data set creation](#example)
+    * [Generating a galaxy catalog and their clean spectra with COSMOSSNAP](#step1)
     * [Transforming spectra to TIPS input format](#step2)
     * [Generating realistic Euclid noisy spectra with TIPS](#step3)
     * [Postprocessing and sample selection for final catalog](#step4)
-    * [Measuring redshifts I: transforming to Darth Fader format](#step5)
-    * [Measuring redshifts II: running Darth Fader](#step6)
+    * [Measuring redshifts](#step5)
 
 ---
 
@@ -59,10 +58,7 @@ When generating a large realistic simulated spectroscopic and photometric data s
 We also require realistic spectral energy distributions (SEDs) and emission-line strengths. Euclid will observe an estimated 50 million spectra through slitless spectroscopy. The required sensitivity is defined in terms of the significance of the detection of the Hα Balmer transition line. These requirements imply a detection rate that depends on magnitude and redshift, therefore demanding that we simulated realistic Hα line width and strength, which depend on the properties of the continuum of the spectral distribution. In addition to continuum and line properties, extinction of light by dust within each galaxy needs to be simulated.
 
 <!---
-### <a name="struct"></a> The structure
-    - COSMOSSNAP for the base spectro-photometric simulation
-    - White gaussian noise 
-    - TIPS for realistic Euclid slitless spectroscopy 
+Need a few more paragraphs here describing the noise we want to add for photometry and the different flavours of spectroscopy. Here or on the Example?
 --->
 
 ## <a name="requirements"></a> Requirements
@@ -100,13 +96,16 @@ All calls to data in any of the examples refer to the relative location a 'data'
 
 ## <a name="example"></a> Example: Euclid-like spectroscopic data
 
-### <a name="step1"></a> Generating a COSMOSSNAP data set
+### <a name="step1"></a> Generating a galaxy catalog and their clean spectra with COSMOSSNAP
 
 #### The base simulated catalog
+<!---
+How we simulate the catalog with cosmossnap
+--->
 
-COSMOSSNAP uses real data as a basis, thereby ensuring that realistic relationships between galaxy type, colors, size, redshift and SED are preserved. It is necessary to ensure that the chosen data is of high enough precision and optical depth to be representative of the observational properties that will be attained by Euclid. COSMOSSNAP chooses the Hubble Telescope COSMOS survey data, combined with additional data from ground telescopes for more precise photometric redshifts. This data set is matched to Hubble ACS imaging data, to provide realistic size-magnitude distributions, employing weak-lensing-quality shape measurements. This produces a realistic master galaxy catalogue with magnitudes, colors, shapes and photometric redshifts for 538 000 galaxies on a 1.38 deg2 region of the sky down to an i-band magnitude of ∼26.5. For each galaxy, LePHARE integrates all spectra in the library for several redshift test values and finds the combination of a spectrum and a redshift value that provide the best possible fit to the observed multi-band data. In this way, each galaxy is assigned a best-fit template and a redshift value. Galaxy emission line fluxes are calculated based on continuum properties of each galaxy. The final SED of each galaxy is then corrected by host extinction (i.e. dimming due to dust within the galaxy itself, estimated from the photometric properties) and redshifted following the best-fit photometric redshift value. At the end of the generation procedure, we have a galaxy catalogue with an ideal set of photometric properties and best-fit spectral templates with realistic continuum and emission line properties.
-
-Our task is to forward-model the observational process in both the spectroscopic and photometric cases in a manner consistent with expected observational conditions.
+```bash
+$ python example/qsub_batch_cosmossnap.py
+```
 
 #### Realistic broadband photometric properties
 
@@ -123,20 +122,46 @@ Optical broadband observations are also subject to noise. The two main sources o
 
 For obtaining realistic spectral templates, we need to resample and integrate the best-fit SEDs. As given by the simulations, these SEDs are pure functional forms. At the end of the observational process, what we obtain is an integrated flux in linear wavelength bins, including noise from sources such as the detector read-out, photon counts, intrinsic galaxy variations, zodiacal light and more.
 
+### <a name="step2"></a>  Transforming spectra to TIPS input format
+
+```bash
+$ python example/qsub_batch_cosmossnap_to_tips.py
+```
+
 ### <a name="step3"></a> Generating spectra with TIPS
 
-Describe PBS runs and scripts for TIPS spectroscopic generation.
+<!--- Describe PBS runs and scripts for TIPS spectroscopic generation. --->
+
+```bash
+$ qsub example/qsub_launcher_tips_array.sh
+```
 
 <figure style="float: center; padding-bottom:0.5em;">
 <img src="./doc/figures/readme/spec_panel.png" width="500" />
 <figcaption style="font-size:80%; text-align:justify;">Several examples of simulated spectra for galaxies at different redshifts, for both shallower (light blue) and deeper (dark blue) observations. The dotted red line indicates the position of the redshifted Hα emission line. </figcaption>
 </figure>
 
-### <a name="step4"></a> Postprocessing and final set generation
+### <a name="step4"></a> Postprocessing and sample selection for final catalog
 
-Brief explanation, figure, point to notebook.
+Open the jupyter notebook example/2017-12-07_Euclid_spectroscopic_selection.ipynb
 
-<figure style="float: left; padding-bottom:0.5em;">
+<div>
+<figure style="float: center; padding-bottom:0.5em;">
 <img src="./doc/figures/readme/euclid_selection.png" width="350" />
 <figcaption style="width:350; font-size:80%; text-align:justify;">Distribution of representative Euclid spectroscopic galaxies in redshift (top) and Hα flux (bottom) after both wavelength and Hα flux selection are taken into account. </figcaption>
 </figure>
+</div>
+
+### <a name="step5"></a> Measuring redshifts
+
+#### Transforming to Darth Fader format
+
+```bash
+$ python example/2018-03-14_transform_specs_tips_to_darth_fader.py
+```
+
+#### Running Darth Fader
+
+```bash
+$ ./darth_fader_qsub_serial.sh
+```
