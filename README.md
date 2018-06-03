@@ -174,7 +174,7 @@ $ qsub example/qsub_launcher_tips_array.sh
 ```
 
 <figure style="float: center; padding-bottom:0.5em;">
-<img src="./doc/figures/readme/spec_panel.png" width="800" />
+<img src="./doc/figures/readme/spec_panel.png" width="700" />
 <figcaption style="font-size:80%; text-align:justify;">Several examples of simulated spectra for galaxies at different redshifts, for both shallower (light blue) and deeper (dark blue) observations. The dotted red line indicates the position of the redshifted Hα emission line. </figcaption>
 </figure>
 
@@ -187,12 +187,10 @@ Firstly, Euclid requirements and methods are driven by the detection of the H-al
 Secondly, TIPS fails silently and produces an empty spectrum when the flux of the galaxy is 
 Open the jupyter notebook example/2017-12-07_Euclid_spectroscopic_selection.ipynb
 
-<div>
-<figure style="float: center; padding-bottom:0.5em;"
+<figure style="float: center; padding-bottom:0.5em;">
 <img src="./doc/figures/readme/euclid_selection.png" width="300" />
 <figcaption style="width:500; font-size:80%; text-align:justify;">Distribution of representative Euclid spectroscopic galaxies in redshift (top) and Hα flux (bottom) after both wavelength and Hα flux selection are taken into account. </figcaption>
 </figure>
-</div>
 
 ---
 
