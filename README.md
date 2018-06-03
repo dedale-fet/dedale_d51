@@ -149,7 +149,9 @@ Optical broadband observations are also subject to noise. The two main sources o
 
 ### <a name="step2"></a>  Transforming spectra to TIPS input format
 
-It is necessary to reformat the files for the TIPS format which we will describe in the next subsection. To that we use a batch PBS creator written in python, which can be called as:
+<!---__ADD A VERY SHORT EXPLANATION OF WHAT THE CODE IS DOING TO THE SPECTRA HERE__--->
+
+It is necessary to reformat the files to the TIPS input format. For that we use a batch PBS creator written in python, which can be called as:
 
 ```bash
 $ python example/qsub_batch_cosmossnap_to_tips.py
@@ -163,26 +165,46 @@ python ../scripts/process_cosmossnap_to_tips.py ../data/cosmossnap/example_run_p
 
 where %d are integers indicating the file in each PBS run. Bear in mind that the paths in the call are _relative_ paths.
 
-<!---__ADD A VERY SHORT EXPLANATION OF WHAT THE CODE IS DOING TO THE SPECTRA HERE__--->
-
 ### <a name="step3"></a> Generating spectra with TIPS
 
-<!--- Describe PBS runs and scripts for TIPS spectroscopic generation. --->
+As mentioned in the requirements section, TIPS is a pixel simulator developed to provide simulated images of Euclid's NISP near-infrared slitless spectrometer. It has functionality to simulate full 2D images, with realistic astrophysical and detector effects. TIPS also provides functionality to directly output 1D spectra, bypassing some of the time-consuming steps of generating the full images. This simplification is still realistic enough for most interesting applications. Here, we focus on this latter use case. For more details on the full image simulator, consult [Zoubian et al. (2014)](http://adsabs.harvard.edu/abs/2014ASPC..485..509Z) and [this example](https://projets.lam.fr/projects/tips/wiki/Examples).
+
+To run TIPS, we use a PBS launcher to run batches of jobs with a predefined number of spectra:
 
 ```bash
 $ qsub example/qsub_launcher_tips_array.sh
 ```
+
+This command will launch the python script [scripts/run_tips_on_block.py](add_link_here) on a single cluster node. This script spawns subprocesses to use the node's cores, and each subprocess calls the TIPS 1D spectrum simulation script:
+
+```bash
+$ python $TIPSDIR/tips/scripts/mk_spc_1d.py path_to_spc_file sigma_src number_exposure sky_background path_to_tips_conf working_directory
+```
+
+where
+
+- __'path_to_spc_file'__ is the path to the spectroscopic input of a run, coming from COSMOSSNAP postprocessing.
+- __'sigma_src'__ is the size of the simulated 2d galaxy image in arcseconds. We use 1.5" for all our simulations.
+- __'number_exposure'__ is the number of images observed that compose the full integrated 2d image. We use 4 for 'Euclid Wide' and 20 for 'Euclid Deep'.
+- __'sky_background'__ is the constant flux due to diffuse astrophysical sources such as [zodiacal light](https://en.wikipedia.org/wiki/Zodiacal_light)
+- __'path_to_tips_conf'__ is the path to TIPS configuration file.
+- __'working_directory'__ is the path where TIPS creates - several - intermediate files and folders.
+
+During TIPS runs, [scripts/run_tips_on_block.py](add_link_here) saves the intermediate files in a local folder on the cluster node to minimize multiple transfers through the cluster network. The 1D spectra are saved to a local folder on the login node at the end of the full process.
+
+For more details on TIPS outputs and options, check the documentation in the $TIPSDIR/tips/scripts/mk_spc_1d.py script.
 
 <figure style="float: center; padding-bottom:0.5em;">
 <img src="./doc/figures/readme/spec_panel.png" width="700" />
 <figcaption style="font-size:80%; text-align:justify;">Several examples of simulated spectra for galaxies at different redshifts, for both shallower (light blue) and deeper (dark blue) observations. The dotted red line indicates the position of the redshifted Hα emission line. </figcaption>
 </figure>
 
+
 ### <a name="step4"></a> Postprocessing and sample selection for final catalog
 
 As a last step of the generating process, we want to ensure that the population of simulated galaxies represents the characteristics of those that will be detected by Euclid.
 
-Firstly, Euclid requirements and methods are driven by the detection of the H-alpha emission line from the Balmer series. Its spectrograph is designed such that, for galaxies within redshifts [0.9, 1.8], the H-alpha line will fall in the range of observed wavelengths (which corresponds to the near-infrared section of the electromagnetic spectrum). We apply this selection criterion with the help of the COSMOSSNAP catalog, which contains the wavelength of the observed H-alpha line. We exclude all galaxies - and corresponding spectra - whose line falls outside the observed wavelength range. 
+Firstly, Euclid requirements and methods are driven by the detection of the Hα emission line from the Balmer series. Its spectrograph is designed such that, for galaxies within redshifts [0.9, 1.8], the Hα line will fall in the range of observed wavelengths (which corresponds to the near-infrared section of the electromagnetic spectrum). We apply this selection criterion with the help of the COSMOSSNAP catalog, which contains the wavelength of the observed Hα line. We exclude all galaxies - and corresponding spectra - whose line falls outside the observed wavelength range. 
 
 Secondly, TIPS fails silently and produces an empty spectrum when the flux of the galaxy is too faint to be detected in the 2D slitless spectroscopy image. We filter out all the 'NaN' and match back to the COSMOSSNAP property catalog to exclude those galaxies.
 
