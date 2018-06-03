@@ -121,13 +121,13 @@ $ $COSMOSSNAPDIR/source/cosmossnap -c /path/to/config.para -SNAP_OUT /path/to/ou
 ```
 where
 
-- '-c' is the path to the configuration file. Error configurations and broadband filters are defined there. If you want to add filters, copy the files in the appropriate format to COSMOSSNAP/filt/.
-- '-SNAP_OUT' is the path to the output photometric subcatalogs.
-- '-STAR' indicates whether stars are excluded from the catalog.
-- '-AGN' indicates whether Active Galactic Nuclei (AGNs) are excluded from the catalog.
-- '-SPECTRA_OUT' produces FITS files with the corresponding spectra, and saves them to the path given.
-- '-SPECTRA_LAMBDA' defines the wavelength range and resolution.
-- '-LINES_STARTEND' runs the code on a subselection of the base catalog between the lines given. There is no randomness in the sampling of the catalog, i.e. a given entry number will always correspond to the same galaxy.
+- __'-c'__ is the path to the configuration file. Error configurations and broadband filters are defined there. If you want to add filters, copy the files in the appropriate format to COSMOSSNAP/filt/.
+- __'-SNAP_OUT'__ is the path to the output photometric subcatalogs.
+- __'-STAR'__ indicates whether stars are excluded from the catalog.
+- __'-AGN'__ indicates whether Active Galactic Nuclei (AGNs) are excluded from the catalog.
+- __'-SPECTRA_OUT'__ produces FITS files with the corresponding spectra, and saves them to the path given.
+- __'-SPECTRA_LAMBDA'__ defines the wavelength range and resolution.
+- __'-LINES_STARTEND'__ runs the code on a subselection of the base catalog between the lines given. There is no randomness in the sampling of the catalog, i.e. a given entry number will always correspond to the same galaxy.
 
 
 For more detail on how to run COSMOSSNAP and what it produces, please look at COSMOSSNAP's README. For information purposes, we include a copy [here](add_link_here).
@@ -180,12 +180,19 @@ $ qsub example/qsub_launcher_tips_array.sh
 
 ### <a name="step4"></a> Postprocessing and sample selection for final catalog
 
-As a last step of the generating process, we need to ensure that the galaxies beinsdfsfsf.
+As a last step of the generating process, we want to ensure that the population of simulated galaxies represents the characteristics of those that will be detected by Euclid.
 
-Firstly, Euclid requirements and methods are driven by the detection of the H-alpha emission line from the Balmer series.
+Firstly, Euclid requirements and methods are driven by the detection of the H-alpha emission line from the Balmer series. Its spectrograph is designed such that, for galaxies within redshifts [0.9, 1.8], the H-alpha line will fall in the range of observed wavelengths (which corresponds to the near-infrared section of the electromagnetic spectrum). We apply this selection criterion with the help of the COSMOSSNAP catalog, which contains the wavelength of the observed H-alpha line. We exclude all galaxies - and corresponding spectra - whose line falls outside the observed wavelength range. 
 
-Secondly, TIPS fails silently and produces an empty spectrum when the flux of the galaxy is 
-Open the jupyter notebook example/2017-12-07_Euclid_spectroscopic_selection.ipynb
+Secondly, TIPS fails silently and produces an empty spectrum when the flux of the galaxy is too faint to be detected in the 2D slitless spectroscopy image. We filter out all the 'NaN' and match back to the COSMOSSNAP property catalog to exclude those galaxies.
+
+These operations are performed and discussed in the jupyter notebook, which needs to be run in order to generate the final products. The notebook can either be run in standard interactive mode, or as part of a pipeline from the command line:
+
+```bash
+$ jupyter nbconvert --to notebook --execute example/2017-12-07_Euclid_spectroscopic_selection.ipynb
+```
+
+The figure below illustrates the effect of those two selection steps. The notebook generates a final [galaxy property catalog](add_link_here) and spectroscopic catalogs for both the [Wide](add_link_here) and [Deep](add_link_here) components of Euclid's spectroscopic survey.
 
 <figure style="float: center; padding-bottom:0.5em;">
 <img src="./doc/figures/readme/euclid_selection.png" width="300" />
