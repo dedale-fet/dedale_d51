@@ -33,7 +33,7 @@ The software available in the repository includes:
 
 ---
 
-## <a name="intro"></a> Introduction
+## <a name="intro"></a> 1. Introduction
 
 ### <a name="science"></a> Dark Energy and the Euclid Satellite
 
@@ -60,7 +60,7 @@ We also require realistic spectral energy distributions (SEDs) and emission-line
 Need a few more paragraphs here describing the noise we want to add for photometry and the different flavours of spectroscopy. Here or on the Example?
 --->
 
-## <a name="requirements"></a> Requirements
+## <a name="requirements"></a> 2. Requirements
 
 ### <a name="basic"></a> Basic Python dependencies
 
@@ -87,13 +87,13 @@ _You will also need an IDL installation and license for this functionality to wo
 
 You will definitely need a computational cluster if you intend to run COSMOSSNAP or TIPS on a non-trivial amount of data. This repository provides PBS scripts to run the different steps of the data processing in such a setting. These were tested in a cluster using the C Shell ([I know, sorry...](http://www.shlomifish.org/open-source/anti/csh/)), so you will need to adapt some lines to Bash if that's what your system uses. This should be easy to do if you have moderate experience with shell scripting.
 
-## <a name="start"></a> Getting Started
+## <a name="start"></a> 3. Getting Started
 
 To use the functionality developed in this repository, simply clone it into your preferred location and ensure that your system's PYTHONPATH points to it. Setting paths for the [Requirements](#requirements) will be necessary only for the specific functionality you intend to use.
 
 All calls to data in any of the examples refer to the relative location a 'data' folder. To set this up, create an empty 'data' folder in ./dedale_d51/, download this [tarball](add_link_here) (for example, with wget) and untar it within the data folder. __BEWARE: This currently contains several GBs of data.__ This alternative [tarball](add_link_here) contains only the data needed to run the example below. For alternative ways to distribute the full data set, contact the Corresponding Author.
 
-## <a name="example"></a> Example: Euclid-like spectroscopic data
+## <a name="example"></a> 4. Example: Euclid-like spectroscopic data
 
 In this example, we demonstrate the use of most of the functionality included in the repository. There are 4 main steps:
 
@@ -104,7 +104,7 @@ In this example, we demonstrate the use of most of the functionality included in
 
 Steps 1, 2 and 4 require the use of a computational cluster. In-between these steps, a non-trivial amount of data processing and formatting is required, which is part of the functionality provided in this repository. These intermediate steps are also described in this Example.
 
-### <a name="step1"></a> 1. Generating a galaxy catalog and their clean spectra with COSMOSSNAP
+### <a name="step1"></a> Generating a galaxy catalog and their clean spectra with COSMOSSNAP
 
 To run COSMOSSNAP, you need to define a configuration file and an error file. You can find the ones used in this example [here](add_link_here)
 
@@ -147,7 +147,7 @@ To generate realistic photometric properties, the first step is to integrate the
 Optical broadband observations are also subject to noise. The two main sources of noise are caused by finite photon counts and CCD read-out noise. These are also introduced by COSMOSSNAP. To verify that the photometric simulations are indeed realistic to the required level, we compare the DES magnitudes and magnitude errors to real data from the CFHT Stripe-82 Survey (CS82). The DES-like i filter data is simulated to have very similar quality to the true CS82 data. The distributions of magnitude errors and depth are in good agreement, confirming that the simulations are a faithful representation of realistic photometric data.
 --->
 
-### <a name="step2"></a>  2. Transforming spectra to TIPS input format
+### <a name="step2"></a>  Transforming spectra to TIPS input format
 
 It is necessary to reformat the files for the TIPS format which we will describe in the next subsection. To that we use a batch PBS creator written in python, which can be called as:
 
@@ -165,7 +165,7 @@ where %d are integers indicating the file in each PBS run. Bear in mind that the
 
 <!---__ADD A VERY SHORT EXPLANATION OF WHAT THE CODE IS DOING TO THE SPECTRA HERE__--->
 
-### <a name="step3"></a> 3. Generating spectra with TIPS
+### <a name="step3"></a> Generating spectra with TIPS
 
 <!--- Describe PBS runs and scripts for TIPS spectroscopic generation. --->
 
@@ -174,11 +174,11 @@ $ qsub example/qsub_launcher_tips_array.sh
 ```
 
 <figure style="float: center; padding-bottom:0.5em;">
-<img src="./doc/figures/readme/spec_panel.png" width="500" />
+<img src="./doc/figures/readme/spec_panel.png" width="800" />
 <figcaption style="font-size:80%; text-align:justify;">Several examples of simulated spectra for galaxies at different redshifts, for both shallower (light blue) and deeper (dark blue) observations. The dotted red line indicates the position of the redshifted Hα emission line. </figcaption>
 </figure>
 
-### <a name="step4"></a> 4. Postprocessing and sample selection for final catalog
+### <a name="step4"></a> Postprocessing and sample selection for final catalog
 
 As a last step of the generating process, we need to ensure that the galaxies beinsdfsfsf.
 
@@ -188,8 +188,8 @@ Secondly, TIPS fails silently and produces an empty spectrum when the flux of th
 Open the jupyter notebook example/2017-12-07_Euclid_spectroscopic_selection.ipynb
 
 <div>
-<figure style="float: center; padding-bottom:0.5em;">
-<img src="./doc/figures/readme/euclid_selection.png" width="500" />
+<figure style="float: center; padding-bottom:0.5em;"
+<img src="./doc/figures/readme/euclid_selection.png" width="300" />
 <figcaption style="width:500; font-size:80%; text-align:justify;">Distribution of representative Euclid spectroscopic galaxies in redshift (top) and Hα flux (bottom) after both wavelength and Hα flux selection are taken into account. </figcaption>
 </figure>
 </div>
