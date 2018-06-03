@@ -30,7 +30,6 @@ The software available in the repository includes:
     * [Transforming spectra to TIPS input format](#step2)
     * [Generating realistic Euclid noisy spectra with TIPS](#step3)
     * [Postprocessing and sample selection for final catalog](#step4)
-    * [Measuring redshifts](#step5)
 
 ---
 
@@ -96,18 +95,47 @@ All calls to data in any of the examples refer to the relative location a 'data'
 
 ## <a name="example"></a> Example: Euclid-like spectroscopic data
 
-### <a name="step1"></a> Generating a galaxy catalog and their clean spectra with COSMOSSNAP
+In this example, we demonstrate the use of most of the functionality included in the repository. There are 4 main steps:
 
-#### The base simulated catalog
-<!---
-How we simulate the catalog with cosmossnap
---->
+    1. Run COSMOSSNAP to generate a simulated galaxy catalog with broadband photometry and their associated clean SEDs.
+    2. Run TIPS on the galaxy spectra to obtain realistic Euclid-like noisy SEDs.
+    3. Select the galaxy population that will be detected by Euclid slitless spectroscopy.
+    4. Run Darth Fader on the resulting spectra to measure redshifts.
+
+Steps 1, 2 and 4 require the use of a computational cluster. In-between these steps, a non-trivial amount of data processing and formatting is required, which is part of the functionality provided in this repository. These intermediate steps are also described in this Example.
+
+### <a name="step1"></a> 1. Generating a galaxy catalog and their clean spectra with COSMOSSNAP
+
+To run COSMOSSNAP, you need to define a configuration file and an error file. You can find the ones used in this example [here](add_link_here)
+
+To launch the code in batch runs in a PBS cluster, the command is:
 
 ```bash
 $ python example/qsub_batch_cosmossnap.py
 ```
 
-#### Realistic broadband photometric properties
+This python script generates multiple PBS files for batches of the base data. The generic form of the COSMOSSNAP command is:
+
+```bash
+$ $COSMOSSNAPDIR/source/cosmossnap -c /path/to/config.para -SNAP_OUT /path/to/outfile.out -STAR [YES/NO] -AGN [YES/NO] -SPECTRA_OUT /path/to/spectra.fits -SPECTRA_LAMBDA Lmin,Lmax,dL -LINES_STARTEND min,max
+```
+where
+
+- '-c' is the path to the configuration file. Error configurations and broadband filters are defined there. If you want to add filters, copy the files in the appropriate format to COSMOSSNAP/filt/.
+- '-SNAP_OUT' is the path to the output photometric subcatalogs.
+- '-STAR' indicates whether stars are excluded from the catalog.
+- '-AGN' indicates whether Active Galactic Nuclei (AGNs) are excluded from the catalog.
+- '-SPECTRA_OUT' produces FITS files with the corresponding spectra, and saves them to the path given.
+- '-SPECTRA_LAMBDA' defines the wavelength range and resolution.
+- '-LINES_STARTEND' runs the code on a subselection of the base catalog between the lines given. There is no randomness in the sampling of the catalog, i.e. a given entry number will always correspond to the same galaxy.
+
+
+For more detail on how to run COSMOSSNAP and what it produces, please look at COSMOSSNAP's README. For information purposes, we include a copy [here](add_link_here).
+
+<!---__ADD A SHORT EXPLANATION OF WHAT COSMOSSNAP IS DOING AND MAYBE A FIGURE OF RESULTS__--->
+
+<!---
+#### What exactly is COSMOSSNAP doing?
 
 To generate realistic photometric properties, the first step is to integrate the best-fit spectral template through a set of broadband wavelength filters that will be used for a given galaxy survey. In actuality, the full transmission curve includes not only filter effects, but also atmospheric transmission (in the case of ground observations), telescope optical effects and more. The full transmission curve is commonly referred to as filter throughput (even though it is not only due to the filter itself). Euclid will require assistance from ground-based survey data sets in order to measure accurate photometric redshifts. COSMOSSNAP takes a defined set of filter throughput definitions for any given ground-based galaxy survey and calculates magnitudes for each galaxy in the catalogue.
 
@@ -117,18 +145,27 @@ To generate realistic photometric properties, the first step is to integrate the
 </figure>
 
 Optical broadband observations are also subject to noise. The two main sources of noise are caused by finite photon counts and CCD read-out noise. These are also introduced by COSMOSSNAP. To verify that the photometric simulations are indeed realistic to the required level, we compare the DES magnitudes and magnitude errors to real data from the CFHT Stripe-82 Survey (CS82). The DES-like i filter data is simulated to have very similar quality to the true CS82 data. The distributions of magnitude errors and depth are in good agreement, confirming that the simulations are a faithful representation of realistic photometric data.
+--->
 
-#### Realistic clean spectra
+### <a name="step2"></a>  2. Transforming spectra to TIPS input format
 
-For obtaining realistic spectral templates, we need to resample and integrate the best-fit SEDs. As given by the simulations, these SEDs are pure functional forms. At the end of the observational process, what we obtain is an integrated flux in linear wavelength bins, including noise from sources such as the detector read-out, photon counts, intrinsic galaxy variations, zodiacal light and more.
-
-### <a name="step2"></a>  Transforming spectra to TIPS input format
+It is necessary to reformat the files for the TIPS format which we will describe in the next subsection. To that we use a batch PBS creator written in python, which can be called as:
 
 ```bash
 $ python example/qsub_batch_cosmossnap_to_tips.py
 ```
 
-### <a name="step3"></a> Generating spectra with TIPS
+This is a simple script which, given a number of batches, creates a PBS script for each batch, launches it on a cluster node and deletes it on the fly. The PBS scripts call a python script that performs the necessary operations on the FITS files. The generic call is
+
+```bash
+python ../scripts/process_cosmossnap_to_tips.py ../data/cosmossnap/example_run_phot_%d.out ../data/cosmossnap/example_run_spec_%d.fits ../data/cosmossnap/output/
+```
+
+where %d are integers indicating the file in each PBS run. Bear in mind that the paths in the call are _relative_ paths.
+
+<!---__ADD A VERY SHORT EXPLANATION OF WHAT THE CODE IS DOING TO THE SPECTRA HERE__--->
+
+### <a name="step3"></a> 3. Generating spectra with TIPS
 
 <!--- Describe PBS runs and scripts for TIPS spectroscopic generation. --->
 
@@ -141,18 +178,31 @@ $ qsub example/qsub_launcher_tips_array.sh
 <figcaption style="font-size:80%; text-align:justify;">Several examples of simulated spectra for galaxies at different redshifts, for both shallower (light blue) and deeper (dark blue) observations. The dotted red line indicates the position of the redshifted Hα emission line. </figcaption>
 </figure>
 
-### <a name="step4"></a> Postprocessing and sample selection for final catalog
+### <a name="step4"></a> 4. Postprocessing and sample selection for final catalog
 
+As a last step of the generating process, we need to ensure that the galaxies beinsdfsfsf.
+
+Firstly, Euclid requirements and methods are driven by the detection of the H-alpha emission line from the Balmer series.
+
+Secondly, TIPS fails silently and produces an empty spectrum when the flux of the galaxy is 
 Open the jupyter notebook example/2017-12-07_Euclid_spectroscopic_selection.ipynb
 
 <div>
 <figure style="float: center; padding-bottom:0.5em;">
-<img src="./doc/figures/readme/euclid_selection.png" width="350" />
-<figcaption style="width:350; font-size:80%; text-align:justify;">Distribution of representative Euclid spectroscopic galaxies in redshift (top) and Hα flux (bottom) after both wavelength and Hα flux selection are taken into account. </figcaption>
+<img src="./doc/figures/readme/euclid_selection.png" width="500" />
+<figcaption style="width:500; font-size:80%; text-align:justify;">Distribution of representative Euclid spectroscopic galaxies in redshift (top) and Hα flux (bottom) after both wavelength and Hα flux selection are taken into account. </figcaption>
 </figure>
 </div>
 
-### <a name="step5"></a> Measuring redshifts
+---
+
+__That's it! You can now apply your favorite redshift estimation method to realistic simulated Euclid data!__
+
+<!---
+
+__KEEP THE REDSHIFT ESTIMATION SECTION OUT UNTIL I CAN BETTER JUSTIFY IT SCIENTIFICALLY__
+
+### <a name="step5"></a> 4. Measuring redshifts
 
 #### Transforming to Darth Fader format
 
@@ -165,3 +215,4 @@ $ python example/2018-03-14_transform_specs_tips_to_darth_fader.py
 ```bash
 $ ./darth_fader_qsub_serial.sh
 ```
+--->
